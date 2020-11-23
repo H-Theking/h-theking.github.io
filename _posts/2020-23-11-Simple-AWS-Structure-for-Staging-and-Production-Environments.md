@@ -1,0 +1,12 @@
+---
+layout: post
+title: Simple AWS Deployment Structure for Staging and Production Environments
+---
+
+When starting with CI/CD on AWS, it is easy to have find yourself with multiple pipelines as you try to figure out the best way test things and not break stuff in production. In our case, we has four Codebuild pipelines, two per environment - staging(demo) and production. There was a build pipeline for the frontend and another for the backend for each environment. We had an automatic deployment to the demo environment at all times. Since we didn't want the code to be deployed to production immediately, we included a manual approval step on Codedeploy, which we will manually approve when we had build up some related stories. The caveat was that we were not always sure which build was being deployed. Yes; Codedeploy has a "Release change" button to deploy the most recent build, but that's easy to forget and yield to the reflex of approving a build - which will deploy the earliest undeployed ECR image. So we went for another setup which works well but not quite optimal. 
+
+In this setup, the deployment to production was a manual process. After having tested everything on demo, we'd just go to the build project and start the build. Though this works without hitches, it builds another ecr image each time a deployment need to be made to production. Secondly, this required doing to manual deployments - frontend and backend. This led us to the current version we have for the backend:
+
+Instead of the manual build building another ecr image, we configured it to just retag the previous demo image (_latest_) with _release_, the modified the ecr source config on Codedeploy to be triggered by the _release_ tag instead of _latest_. In the buildspec command of the build project, we retag the images of both frontend and backend production repositories such that both the front end and backend are always deployed together.
+
+At this point we have three docker builds - one for the backend and two for the frontend. The frontend builds two ecr images (in the same build project) for the demo and production environments, because in angular, setting environment variables is happens at build time and not deploy time. Once a workaround is figured out, we will have just two docker builds.
