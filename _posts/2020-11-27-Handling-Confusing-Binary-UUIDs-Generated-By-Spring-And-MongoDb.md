@@ -24,6 +24,6 @@ So here are the steps I took, to ensure that the ID in the DB matches that on co
    
    `BinData(3,"Base64_id_2")`
 
-5. recreate your document with this new id, and what every is returned by your client now matches the COGNITO_UUID
+5. recreate your document with this new id and what ever is returned by your client now matches the COGNITO_UUID
 
 Thank you mongo for giving me a hard time.
