@@ -8,25 +8,25 @@ So I am working on this project which uses cognito for authentication, with a cu
 So here are the steps I took, to ensure that the ID in the DB matches that on cognito:
 
 1. Copy the custom id (uuid) on cognito, head to studio 3T (by mongoDB) and create the binary id using the following command in intellishell:
-	
- ...```
- ...BinData(3, LUUID("COGNITO_UUID").base64())
- ...```
-...You get something like in the form `BinData(3, "Rb4aiOAWQTSYKUveIUWU2g==")`
-...Notice that I'm using type 3 here because that is what java uses by default. MongoDB has upgraded to type 4 ID which is more consistent with the accepted norm.
+
+   ```
+   BinData(3, LUUID("COGNITO_UUID").base64())
+   ```
+   You get something like in the form `BinData(3, "Rb4aiOAWQTSYKUveIUWU2g==")`
+   Notice that I'm using type 3 here because that is what java uses by default. MongoDB has upgraded to type 4 ID which is more consistent with the accepted norm.
 
 2. Create the document with the Id you just got above
 3. Load the data as interpreted by java in the html client, the id is not the same as the COGNITO_UUID you used above. You get a different UUID - UUID_2
 4. Copy this Id, head back to studio 3T and create another binary id from UUID_2
- ...```
- ...BinData(3, LUUID("UUID_2").base64())
- ...```
- 
-...You now get 
-...```
-...BinData(3,"Base64_id_2")
-...```
+
+   ```
+   BinData(3, LUUID("UUID_2").base64())
+   ```
+   You now get 
+   ```
+   BinData(3,"Base64_id_2")
+   ```
 
 5. recreate your document with this new id, and what every is returned by your client now matches the COGNITO_UUID
 
-Thanks mongo for giving me a hard time.
+Thank you mongo for giving me a hard time.
